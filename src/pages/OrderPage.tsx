@@ -10,14 +10,15 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import TrackingDetails from "../components/TrackingDetails";
 
-
 async function fetchOrderDetails(trackingNumber: number | undefined) {
   try {
     const response = await fetch(
       `https://tracking.bosta.co/shipments/track/${trackingNumber}`
     );
     if (!response.ok) {
-      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      const err = await response.json();
+
+      throw new Error(`${err.error} `);
     }
     return await response.json();
   } catch (error) {
@@ -55,7 +56,7 @@ export const OrderPage = () => {
   ];
 
   const handleFetchDetails = async () => {
-    setOrderNumber(Number(trackingNumber))
+    setOrderNumber(Number(trackingNumber));
     setIsLoading(true);
     setError(null);
 
@@ -109,10 +110,13 @@ export const OrderPage = () => {
         </div>
       </div>
       <div className="px-10 md:px-14 lg:px-28 xl:px-40">
-        {isLoading && <p className="mt-4">Loading...</p>}
+        {isLoading && <p className="mt-10">Loading...</p>}
 
-        {error && (
-          <p className="mt-16 text-red-500">Error fetching details: {error}</p>
+        {error && trackingNumber && (
+          <p className="text-center mt-28 text-secondary text-3xl capitalize">
+            {error}
+            <BiSolidErrorAlt className="mx-auto mt-10 size-16" />
+          </p>
         )}
 
         {data?.CurrentStatus ? (
@@ -135,7 +139,11 @@ export const OrderPage = () => {
               </div>
               <hr></hr>
               <div className="p-4">
-                <Stepper activeStep={activeStep} alternativeLabel orientation={isMobile ? 'vertical' : 'horizontal'}>
+                <Stepper
+                  activeStep={activeStep}
+                  alternativeLabel
+                  orientation={isMobile ? "vertical" : "horizontal"}
+                >
                   {steps.map((step, idx) => (
                     <Step
                       key={step.status}
@@ -162,8 +170,12 @@ export const OrderPage = () => {
               </div>
             ) : null}
           </>
-        ) : 
-        <p className="text-center mt-28 text-LightGray font-bold text-3xl capitalize">Order not found <BiSolidErrorAlt className="mx-auto mt-10 size-16"/></p>}
+        ) : data?.SupportPhoneNumbers && trackingNumber ? (
+          <p className="text-center mt-28 text-LightGray font-bold text-3xl capitalize">
+            Order not found{" "}
+            <BiSolidErrorAlt className="mx-auto mt-10 size-16" />
+          </p>
+        ) : null}
       </div>
     </>
   );
