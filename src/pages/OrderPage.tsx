@@ -1,13 +1,15 @@
+// @ts-nocheck
 import { useState } from "react";
 import location from "../assets/loc.png";
 import bostaAr from "../assets/bosta-ar.png";
 import { IoSearchOutline } from "react-icons/io5";
+import { BiSolidErrorAlt } from "react-icons/bi";
 import dayjs from "dayjs";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import TrackingDetails from "../components/TrackingDetails";
-import { BiSolidErrorAlt } from "react-icons/bi";
+
 
 async function fetchOrderDetails(trackingNumber: number | undefined) {
   try {

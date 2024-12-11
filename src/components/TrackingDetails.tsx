@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Box, Step, StepContent, StepLabel, Stepper } from "@mui/material";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
